@@ -32,6 +32,8 @@ services:
     volumes:
       - ./wonyoung_narajangteo:/srv/project/wonyoung_narajangteo
       - ./.config:/srv/project/.config
+      - ./.static:/srv/project/.static
+      - ./.static:/srv/project/static
 
     hostname: web_service
     ports:
