@@ -1,10 +1,13 @@
 from django.db import models
 
+# TODO 공고일 (개찰일) 마감일을 date롤 넣어서 처리
+# 시간이 지난건 False
+
 
 # Create your models here.
 class Keyword(models.Model):
-    name = models.CharField(verbose_name="키워드명", max_length=100)
-    link = models.TextField(verbose_name="검색링크", )
+    name = models.CharField(verbose_name="키워드명", max_length=100, unique=True)
+    # link = models.TextField(verbose_name="검색링크", blank=True)
     is_active = models.BooleanField(default=True)
 
     created = models.DateField("생성 날짜", auto_now_add=True)
@@ -29,7 +32,7 @@ class DailyKeywordResult(models.Model):
 class Announcement(models.Model):
     dk_result = models.ForeignKey(DailyKeywordResult, on_delete=models.CASCADE)
     title = models.CharField(verbose_name="공고명", max_length=150)
-    link = models.CharField(max_length=200)
+    link = models.CharField(verbose_name='공고링크', max_length=200)
 
     date_text = models.CharField("공고일(마감일)", max_length=100)
 
