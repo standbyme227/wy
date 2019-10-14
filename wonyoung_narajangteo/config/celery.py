@@ -29,7 +29,7 @@ def debug_task(self):
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(hour=15, minute=52, day_of_week='1-5'),
+        crontab(hour=16, minute=17, day_of_week='1-5'),
         get_announcement(),
     )
 
