@@ -13,6 +13,7 @@ services:
     volumes:
       - ./.config:/home
       - ./nginx_log:/var/log/nginx
+      - staticfiles:/staticfiles
 
     networks:
       - backend
@@ -33,7 +34,8 @@ services:
       - ./wonyoung_narajangteo:/srv/project/wonyoung_narajangteo
       - ./.config:/srv/project/.config
       - ./.static:/srv/project/.static
-      - ./.static:/srv/project/static
+#      - ./.static:/srv/project/static
+      - staticfiles:/srv/project/.static
 
     hostname: web_service
     ports:
