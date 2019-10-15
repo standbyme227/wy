@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.datastructures import MultiValueDictKeyError
+from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 from collected_result.models import Keyword, DailyKeywordResult, Announcement
@@ -32,7 +33,7 @@ class DailyKeywordResultAdmin(admin.ModelAdmin):
 
 class AnnouncementAdmin(admin.ModelAdmin):
     list_display = [
-        "id", "title", "link", "date_text", "is_active", "dk_result"
+        "id", "title", "show_link", "date_text", "is_active", "dk_result"
     ]
 
     # list_filter = ("dk_result__id",)
@@ -64,7 +65,9 @@ class AnnouncementAdmin(admin.ModelAdmin):
         else:
             return queryset
 
-
+    def show_link(self, obj):
+        return format_html('<a href="%s" target="_blank">%s</a>' % (obj.link, obj.link))
+    show_link.allow_tags = True
 
 admin.site.register(Keyword, KeywordAdmin)
 admin.site.register(DailyKeywordResult, DailyKeywordResultAdmin)
