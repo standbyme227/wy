@@ -1,10 +1,16 @@
 from django.db import models
 
+from django.template.defaultfilters import escape
+
+
 # TODO 공고일 (개찰일) 마감일을 date롤 넣어서 처리
 # 시간이 지난건 False
 
 
 # Create your models here.
+from django.urls import reverse
+
+
 class Keyword(models.Model):
     name = models.CharField(verbose_name="키워드명", max_length=100, unique=True)
     # link = models.TextField(verbose_name="검색링크", blank=True)
@@ -28,6 +34,11 @@ class DailyKeywordResult(models.Model):
     def __str__(self):
         return f"{self.created}, {self.keyword}"
 
+    # def announce_link(self):
+    #     return '<a href="%s">%s</a>' % (reverse("admin:announcement", args=(self.user.id,)), escape(self.user))
+    #
+    # announce_link.allow_tags = True
+    # announce_link.short_description = "User"
 
 class Announcement(models.Model):
     dk_result = models.ForeignKey(DailyKeywordResult, on_delete=models.CASCADE)
