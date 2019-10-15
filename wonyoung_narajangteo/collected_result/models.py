@@ -1,14 +1,11 @@
 from django.db import models
 
-from django.template.defaultfilters import escape
-
 
 # TODO 공고일 (개찰일) 마감일을 date롤 넣어서 처리
 # 시간이 지난건 False
 
 
 # Create your models here.
-from django.urls import reverse
 
 
 class Keyword(models.Model):
@@ -40,8 +37,10 @@ class DailyKeywordResult(models.Model):
     # announce_link.allow_tags = True
     # announce_link.short_description = "User"
 
+
 class Announcement(models.Model):
     dk_result = models.ForeignKey(DailyKeywordResult, on_delete=models.CASCADE)
+    job = models.CharField(verbose_name="업무명", max_length=100, blank=True, null=True)
     title = models.CharField(verbose_name="공고명", max_length=150)
     link = models.CharField(verbose_name='공고링크', max_length=200)
 

@@ -70,6 +70,10 @@ def get_announcement():
         table_area = soup.find('tbody').find_all('tr')
 
         for table in table_area:
+            try:
+                job = table.find('td')
+            except AttributeError:
+                continue
             # 공고명
             title_a = table.find(class_='tl')
             try:
@@ -94,7 +98,7 @@ def get_announcement():
             if convert_date < from_date_data:
                 continue
 
-            a = Announcement.objects.filter(dk_result=dk_result, title=title, date_text=date_text)
+            a = Announcement.objects.filter(dk_result=dk_result, job=job, title=title, date_text=date_text)
             if not a:
                 Announcement.objects.create(
                     dk_result=dk_result, title=title, link=title_link, date_text=date_text,
