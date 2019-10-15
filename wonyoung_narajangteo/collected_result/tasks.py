@@ -7,7 +7,7 @@ app.conf.beat_schedule = {
     'add-every-10-sec': {
         'task': 'collected_result.tasks.get_announcement',
         # 'schedule': 10.0,
-        'schedule': crontab(hour=14, minute=00, day_of_week="1,2,3,4,5"),
+        'schedule': crontab(hour=14, minute=10, day_of_week="0,1,2,3,4"),
     },
 }
 
@@ -72,11 +72,21 @@ def get_announcement():
         for table in table_area:
             # 공고명
             title_a = table.find(class_='tl')
-            title = title_a.get_text()
-            title_link = title_a.find('a').get('href')
+            try:
+                title = title_a.get_text()
+            except AttributeError:
+                continue
+                
+            try:
+                title_link = title_a.find('a').get('href')
+            except AttributeError:
+                continue
 
             # 공고일 / 마감일
-            date_text = table.find(class_='tc').get_text()
+            try:
+                date_text = table.find(class_='tc').get_text()
+            except AttributeError:
+                continue
 
             # 공고일이 from_date보다 작으면 continue(저장 X)
             convert_date = datetime.strptime(date_text[:16], '%Y/%m/%d %H:%M')
