@@ -54,11 +54,14 @@ class AnnouncementAdmin(admin.ModelAdmin):
             queryset = queryset.none()
 
         try:
-            dk_result_id = int(request.GET["dk_result_id__exact"][0])
+            dk_result_id = int(request.GET["dk_result_id__exact"])
+            print(dk_result_id)
         except MultiValueDictKeyError:
             return queryset
         if dk_result_id:
             dk_result = DailyKeywordResult.objects.filter(id=dk_result_id).first()
+            if not dk_result:
+                return queryset
             dk_result.is_active = False
             dk_result.save()
             return queryset

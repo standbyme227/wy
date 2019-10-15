@@ -76,7 +76,7 @@ def get_announcement():
                 title = title_a.get_text()
             except AttributeError:
                 continue
-                
+
             try:
                 title_link = title_a.find('a').get('href')
             except AttributeError:
