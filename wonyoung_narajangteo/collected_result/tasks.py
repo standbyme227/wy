@@ -5,7 +5,7 @@ app.conf.beat_schedule = {
     'add-every-10-sec': {
         'task': 'collected_result.tasks.get_announcement',
         # 'schedule': 10.0,
-        'schedule': crontab(hour=19, minute=35, day_of_week="0,1,2,3,4"),
+        'schedule': crontab(hour=14, minute=00, day_of_week="0,1,2,3,4"),
     },
 }
 
@@ -41,9 +41,11 @@ def get_announcement():
         from_date = f'{from_date_data.year}/{from_date_data.month}/{from_date_data.day}'
 
     else:
-        to_date_data = now - timedelta(hours=5) - timedelta(minutes=30)
-        to_date = f'{to_date_data.year}/{to_date_data.month}/{to_date_data.day}'
-        from_date_data = now - timedelta(1) - timedelta(hours=5) - timedelta(minutes=30)
+        # to_date_data = now - timedelta(hours=5) - timedelta(minutes=30)
+        # to_date = f'{to_date_data.year}/{to_date_data.month}/{to_date_data.day}'
+        to_date = f'{now.year}/{now.month}/{now.day}'
+        # from_date_data = now - timedelta(1) - timedelta(hours=5) - timedelta(minutes=30)
+        from_date_data = now - timedelta(1)
         from_date = f'{from_date_data.year}/{from_date_data.month}/{from_date_data.day}'
 
     # 키워드
@@ -107,7 +109,7 @@ def get_announcement():
                 announcement, created = Announcement.objects.get_or_create(
                     dk_result=dk_result, title=title, link=title_link, date_text=date_text, job=job,
                 )
-                if created:
+                if not created:
                     continue
                 dk_result.announcement_cnt += 1
                 dk_result.save()
