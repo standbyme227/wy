@@ -1,24 +1,24 @@
-from bs4 import BeautifulSoup
 from celery.schedules import crontab
-
 from config.celery import app
 
 app.conf.beat_schedule = {
     'add-every-10-sec': {
         'task': 'collected_result.tasks.get_announcement',
         # 'schedule': 10.0,
-        'schedule': crontab(hour=14, minute=00, day_of_week="0,1,2,3,4"),
+        'schedule': crontab(hour=19, minute=35, day_of_week="0,1,2,3,4"),
     },
 }
 
 
 @app.task
 def get_announcement():
+    from bs4 import BeautifulSoup
     from selenium import webdriver
     from selenium.webdriver.support.ui import Select
     from collected_result.models import Keyword, DailyKeywordResult, Announcement
     from datetime import datetime
     from datetime import timedelta
+
     # driver = webdriver.Chrome('/Users/shsf/Projects/chromedriver')
     driver = webdriver.PhantomJS('/usr/local/bin/phantomjs')  # 맥 OS
     driver.implicitly_wait(5)
@@ -37,12 +37,13 @@ def get_announcement():
 
     if now.weekday() == 0:
         to_date = f'{now.year}/{now.month}/{now.day}'
-        from_date_data = datetime.today() - timedelta(3)
+        from_date_data = now - timedelta(3)
         from_date = f'{from_date_data.year}/{from_date_data.month}/{from_date_data.day}'
 
     else:
-        to_date = f'{now.year}/{now.month}/{now.day}'
-        from_date_data = datetime.today() - timedelta(1)
+        to_date_data = now - timedelta(hours=5) - timedelta(minutes=30)
+        to_date = f'{to_date_data.year}/{to_date_data.month}/{to_date_data.day}'
+        from_date_data = now - timedelta(1) - timedelta(hours=5) - timedelta(minutes=30)
         from_date = f'{from_date_data.year}/{from_date_data.month}/{from_date_data.day}'
 
     # 키워드
@@ -71,7 +72,7 @@ def get_announcement():
 
         for table in table_area:
             try:
-                job = table.find('td')
+                job = table.find('td').get_text()
             except AttributeError:
                 continue
             # 공고명
@@ -97,12 +98,17 @@ def get_announcement():
 
             if convert_date < from_date_data:
                 continue
+            try:
+                a = Announcement.objects.filter(dk_result=dk_result, job=job, title=title, date_text=date_text)
+            except TypeError:
+                continue
 
-            a = Announcement.objects.filter(dk_result=dk_result, job=job, title=title, date_text=date_text)
             if not a:
-                Announcement.objects.create(
-                    dk_result=dk_result, title=title, link=title_link, date_text=date_text,
+                announcement, created = Announcement.objects.get_or_create(
+                    dk_result=dk_result, title=title, link=title_link, date_text=date_text, job=job,
                 )
+                if created:
+                    continue
                 dk_result.announcement_cnt += 1
                 dk_result.save()
             else:
