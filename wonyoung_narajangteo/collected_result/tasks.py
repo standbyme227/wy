@@ -5,7 +5,7 @@ app.conf.beat_schedule = {
     'add-every-10-sec': {
         'task': 'collected_result.tasks.get_announcement',
         # 'schedule': 10.0,
-        'schedule': crontab(hour=16, minute=32, day_of_week="0,1,2,3,4,5"),
+        'schedule': crontab(hour=16, minute=38, day_of_week="0,1,2,3,4,5"),
     },
 }
 
@@ -36,11 +36,11 @@ def get_announcement():
     # datetime = 0이 월요일
     now = datetime.today() + 1
 
-    if now.weekday() == 0 or now.weekday() == 7:
-        to_date_data = now - timedelta(2) - timedelta(hours=2) - timedelta(minutes=32)
+    if now.weekday() == 6:
+        to_date_data = now - timedelta(2) - timedelta(hours=2) - timedelta(minutes=38)
         to_date = f'{to_date_data.year}/{to_date_data.month}/{to_date_data.day}'
         # to_date = f'{now.year}/{now.month}/{now.day}'
-        from_date_data = now - timedelta(3) - timedelta(hours=2) - timedelta(minutes=32)
+        from_date_data = now - timedelta(3) - timedelta(hours=2) - timedelta(minutes=38)
         # from_date_data = now - timedelta(3)
         from_date = f'{from_date_data.year}/{from_date_data.month}/{from_date_data.day}'
 
