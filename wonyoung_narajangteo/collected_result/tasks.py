@@ -36,7 +36,7 @@ def get_announcement():
     # datetime = 0이 월요일
     now = datetime.today()
 
-    if now.weekday() == 6:
+    if now.weekday() == 0:
         # to_date_data = now - timedelta(2) - timedelta(hours=2) - timedelta(minutes=48)
         # to_date = f'{to_date_data.year}/{to_date_data.month}/{to_date_data.day}'
         # from_date_data = now - timedelta(3) - timedelta(hours=2) - timedelta(minutes=48)
