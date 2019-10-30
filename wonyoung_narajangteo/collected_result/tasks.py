@@ -6,7 +6,7 @@ app.conf.beat_schedule = {
     'add-every-14': {
         'task': 'collected_result.tasks.get_announcement',
         # 'schedule': 10.0,
-        'schedule': crontab(hour=15, minute=56, day_of_week="1,2,3,4,5"),
+        'schedule': crontab(hour=14, minute=00, day_of_week="1,2,3,4,5"),
     },
 }
 
