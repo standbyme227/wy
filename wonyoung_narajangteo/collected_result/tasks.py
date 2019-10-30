@@ -6,12 +6,7 @@ app.conf.beat_schedule = {
     'add-every-14': {
         'task': 'collected_result.tasks.get_announcement',
         # 'schedule': 10.0,
-        'schedule': crontab(hour=14, minute=00, day_of_week="1,2,3,4,5"),
-    },
-    'add-every-00': {
-        'task': 'collected_result.tasks.check_announcement',
-        # 'schedule': 10.0,
-        'schedule': crontab(hour=00, minute=00, day_of_week="1,2,3,4,5,6,7"),
+        'schedule': crontab(hour=15, minute=56, day_of_week="1,2,3,4,5"),
     },
 }
 
@@ -127,15 +122,4 @@ def get_announcement():
                 continue
         driver.back()
 
-
-@app.task
-def check_announcement():
-    from collected_result.models import Announcement
-    announcements = Announcement.objects.all()
-    title_list = announcements.values_list("title", flat=True)
-    for title in title_list:
-        filtered_anno_qs = announcements.filter(title=title)
-        filtered_anno_id = filtered_anno_qs.first().id
-        duplicated_qs = filtered_anno_qs.exclude(id=filtered_anno_id)
-        duplicated_qs.delete()
 
